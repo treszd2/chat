@@ -1,0 +1,2918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatSpace</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #080b14;
+  --panel: #111827;
+  --panel2: #172033;
+  --border: #26334d;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --primary: #6366f1;
+  --primary2: #818cf8;
+  --green: #22c55e;
+  --red: #ef4444;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* =========================
+   AUTH
+========================= */
+
+.auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(99,102,241,.25), transparent 35%),
+    radial-gradient(circle at 80% 80%, rgba(139,92,246,.15), transparent 35%),
+    var(--bg);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 430px;
+  background: rgba(17,24,39,.97);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 32px;
+  box-shadow: 0 30px 90px rgba(0,0,0,.5);
+}
+
+.logo {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.logo span {
+  color: var(--primary2);
+}
+
+.auth-subtitle {
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #0c1220;
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.auth-tab {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 11px;
+  border-radius: 7px;
+}
+
+.auth-tab.active {
+  background: var(--primary);
+  color: white;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: #0b1220;
+  border: 1px solid var(--border);
+  color: white;
+  padding: 13px;
+  border-radius: 9px;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+}
+
+.auth-button {
+  width: 100%;
+  border: 0;
+  background: var(--primary);
+  color: white;
+  padding: 14px;
+  border-radius: 9px;
+  font-weight: 800;
+}
+
+.auth-button:hover {
+  background: #5558e8;
+}
+
+.auth-note {
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+  margin-top: 15px;
+  line-height: 1.5;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+  display: none;
+  height: 100vh;
+}
+
+.app.active {
+  display: flex;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+  width: 285px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.brand {
+  padding: 22px;
+  font-size: 24px;
+  font-weight: 900;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand span {
+  color: var(--primary2);
+}
+
+.profile {
+  padding: 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.avatar {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#6366f1,#8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.profile-name {
+  font-weight: 800;
+}
+
+.online {
+  color: var(--green);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.nav {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #cbd5e1;
+  padding: 12px;
+  border-radius: 9px;
+  text-align: left;
+  margin-bottom: 4px;
+}
+
+.nav-button:hover {
+  background: var(--panel2);
+}
+
+.nav-button.active {
+  background: var(--primary);
+  color: white;
+}
+
+.friends {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+}
+
+.friends-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.add-button {
+  width: 29px;
+  height: 29px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--primary);
+  color: white;
+  font-size: 20px;
+}
+
+.friend {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: white;
+  padding: 9px;
+  border-radius: 9px;
+  text-align: left;
+}
+
+.friend:hover,
+.friend.active {
+  background: var(--panel2);
+  border-color: var(--border);
+}
+
+.friend-avatar {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#334155,#64748b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.friend-name {
+  font-weight: 700;
+}
+
+.friend-status {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.empty {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.logout {
+  padding: 13px;
+  border-top: 1px solid var(--border);
+}
+
+.logout button {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: #cbd5e1;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+/* =========================
+   CHAT
+========================= */
+
+.chat-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  min-height: 74px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+}
+
+.chat-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-user-name {
+  font-weight: 800;
+}
+
+.chat-user-status {
+  color: var(--green);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.call-buttons {
+  display: flex;
+  gap: 7px;
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: white;
+  border-radius: 9px;
+  font-size: 18px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  max-width: 75%;
+}
+
+.message.me {
+  align-self: flex-end;
+}
+
+.message.them {
+  align-self: flex-start;
+}
+
+.bubble {
+  padding: 11px 14px;
+  border-radius: 15px;
+  line-height: 1.45;
+}
+
+.me .bubble {
+  background: var(--primary);
+  border-bottom-right-radius: 4px;
+}
+
+.them .bubble {
+  background: var(--panel2);
+  border-bottom-left-radius: 4px;
+}
+
+.message-time {
+  font-size: 10px;
+  opacity: .6;
+  margin-top: 4px;
+}
+
+.composer {
+  border-top: 1px solid var(--border);
+  padding: 13px;
+  display: flex;
+  gap: 9px;
+}
+
+.composer input {
+  flex: 1;
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: white;
+  padding: 12px;
+  border-radius: 9px;
+  outline: none;
+}
+
+.send {
+  border: 0;
+  background: var(--primary);
+  color: white;
+  padding: 0 18px;
+  border-radius: 9px;
+}
+
+.welcome {
+  margin: auto;
+  text-align: center;
+  max-width: 400px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.welcome h1 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   VIDEO FEED
+========================= */
+
+.video-page {
+  height: 100%;
+  display: none;
+  position: relative;
+  background: #000;
+}
+
+.video-page.active {
+  display: block;
+}
+
+.video-top {
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(
+    rgba(0,0,0,.7),
+    transparent
+  );
+}
+
+.video-title {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.upload-button {
+  border: 0;
+  background: var(--primary);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 9px;
+  font-weight: 800;
+}
+
+.video-feed {
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+.video-card {
+  height: 100%;
+  position: relative;
+  scroll-snap-align: start;
+  background: #050505;
+  display: flex;
+  justify-content: center;
+}
+
+.video-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: black;
+}
+
+.video-info {
+  position: absolute;
+  left: 20px;
+  bottom: 25px;
+  max-width: 65%;
+  text-shadow: 0 2px 8px black;
+}
+
+.video-author {
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.video-caption {
+  line-height: 1.4;
+}
+
+.video-actions {
+  position: absolute;
+  right: 20px;
+  bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.video-action {
+  border: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(20,20,20,.72);
+  color: white;
+  font-size: 20px;
+}
+
+.video-action span {
+  display: block;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.video-empty {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+}
+
+.video-empty-inner {
+  max-width: 400px;
+}
+
+.video-empty h1 {
+  margin-bottom: 10px;
+}
+
+.video-empty p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* =========================
+   MODALS
+========================= */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.overlay.active {
+  display: flex;
+}
+
+.modal {
+  width: 100%;
+  max-width: 460px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.modal h2 {
+  margin-bottom: 8px;
+}
+
+.modal p {
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: white;
+}
+
+.modal-actions .primary {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+/* CALL */
+
+.call-modal {
+  text-align: center;
+}
+
+.call-avatar {
+  width: 100px;
+  height: 100px;
+  margin: 10px auto 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#6366f1,#8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.call-status {
+  color: var(--muted);
+}
+
+.call-controls {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.call-control {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: white;
+  font-size: 20px;
+}
+
+.call-control.end {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+/* UPLOAD */
+
+.file-input {
+  width: 100%;
+  padding: 15px;
+  background: #0b1220;
+  border: 1px dashed var(--border);
+  color: var(--muted);
+  border-radius: 10px;
+}
+
+.upload-preview {
+  margin-top: 15px;
+  width: 100%;
+  max-height: 300px;
+  border-radius: 10px;
+  display: none;
+  background: black;
+}
+
+/* MOBILE */
+
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 800px) {
+
+  .sidebar {
+    position: fixed;
+    z-index: 50;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    transition: .2s;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .mobile-menu {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: white;
+    border-radius: 8px;
+    margin-right: 10px;
+  }
+
+  .message {
+    max-width: 88%;
+  }
+
+  .video-info {
+    max-width: 70%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     AUTH SCREEN
+========================= -->
+
+<section class="auth" id="auth">
+
+  <div class="auth-card">
+
+    <div class="logo">
+      Chat<span>Space</span>
+    </div>
+
+    <div class="auth-subtitle">
+      Chat, call and share videos with friends.
+    </div>
+
+    <div class="auth-tabs">
+
+      <button
+        class="auth-tab active"
+        id="loginTab"
+      >
+        Log In
+      </button>
+
+      <button
+        class="auth-tab"
+        id="signupTab"
+      >
+        Sign Up
+      </button>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <form id="loginForm">
+
+      <div class="form-group">
+        <label>Username</label>
+
+        <input
+          id="loginUsername"
+          type="text"
+          placeholder="Your username"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+
+        <input
+          id="loginPassword"
+          type="password"
+          placeholder="Your password"
+          required
+        >
+      </div>
+
+      <button
+        class="auth-button"
+        type="submit"
+      >
+        Log In
+      </button>
+
+    </form>
+
+
+    <!-- SIGN UP -->
+
+    <form
+      id="signupForm"
+      style="display:none;"
+    >
+
+      <div class="form-group">
+        <label>Username</label>
+
+        <input
+          id="signupUsername"
+          type="text"
+          placeholder="Choose a username"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+
+        <input
+          id="signupPassword"
+          type="password"
+          placeholder="Create a password"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Confirm password</label>
+
+        <input
+          id="signupConfirm"
+          type="password"
+          placeholder="Confirm your password"
+          required
+        >
+      </div>
+
+      <button
+        class="auth-button"
+        type="submit"
+      >
+        Create Account
+      </button>
+
+    </form>
+
+    <div class="auth-note">
+      Prototype version. Accounts are stored locally
+      in this browser. A real app needs a secure server.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     MAIN APP
+========================= -->
+
+<div class="app" id="app">
+
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+      Chat<span>Space</span>
+    </div>
+
+
+    <div class="profile">
+
+      <div class="avatar" id="myAvatar">
+        U
+      </div>
+
+      <div>
+        <div
+          class="profile-name"
+          id="myName"
+        >
+          User
+        </div>
+
+        <div class="online">
+          ● Online
+        </div>
+      </div>
+
+    </div>
+
+
+    <nav class="nav">
+
+      <button
+        class="nav-button active"
+        id="chatNav"
+      >
+        💬 Chats
+      </button>
+
+      <button
+        class="nav-button"
+        id="videoNav"
+      >
+        ▶ Videos
+      </button>
+
+    </nav>
+
+
+    <div
+      class="friends"
+      id="friendsSection"
+    >
+
+      <div class="friends-heading">
+
+        <span>Friends</span>
+
+        <button
+          class="add-button"
+          id="addFriendButton"
+        >
+          +
+        </button>
+
+      </div>
+
+      <div id="friendList"></div>
+
+    </div>
+
+
+    <div class="logout">
+
+      <button id="logoutButton">
+        Log Out
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+
+    <!-- CHAT PAGE -->
+
+    <section
+      class="chat-page"
+      id="chatPage"
+    >
+
+      <header class="chat-header">
+
+        <div style="display:flex;align-items:center;">
+
+          <button
+            class="mobile-menu"
+            id="mobileMenu"
+          >
+            ☰
+          </button>
+
+          <div
+            class="chat-user"
+            id="chatUser"
+            style="display:none;"
+          >
+
+            <div
+              class="avatar"
+              id="chatAvatar"
+            >
+              ?
+            </div>
+
+            <div>
+
+              <div
+                class="chat-user-name"
+                id="chatUserName"
+              >
+                Friend
+              </div>
+
+              <div class="chat-user-status">
+                ● Online
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="call-buttons"
+          id="callButtons"
+          style="display:none;"
+        >
+
+          <button
+            class="icon-button"
+            id="voiceCall"
+            title="Voice call"
+          >
+            📞
+          </button>
+
+          <button
+            class="icon-button"
+            id="videoCall"
+            title="Video call"
+          >
+            🎥
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <div
+        class="welcome"
+        id="chatWelcome"
+      >
+
+        <h1>Welcome to ChatSpace</h1>
+
+        <p>
+          Add a friend using their username,
+          then select them from the Friends list
+          to start chatting or calling.
+        </p>
+
+      </div>
+
+
+      <div
+        class="messages"
+        id="messages"
+        style="display:none;"
+      ></div>
+
+
+      <form
+        class="composer"
+        id="composer"
+        style="display:none;"
+      >
+
+        <input
+          id="messageInput"
+          placeholder="Type a message..."
+          autocomplete="off"
+        >
+
+        <button
+          class="send"
+          type="submit"
+        >
+          Send
+        </button>
+
+      </form>
+
+    </section>
+
+
+    <!-- VIDEO PAGE -->
+
+    <section
+      class="video-page"
+      id="videoPage"
+    >
+
+      <div class="video-top">
+
+        <div class="video-title">
+          Videos
+        </div>
+
+        <button
+          class="upload-button"
+          id="uploadButton"
+        >
+          + Upload
+        </button>
+
+      </div>
+
+
+      <div
+        class="video-feed"
+        id="videoFeed"
+      ></div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- =========================
+     ADD FRIEND MODAL
+========================= -->
+
+<div
+  class="overlay"
+  id="friendModal"
+>
+
+  <div class="modal">
+
+    <h2>Add a Friend</h2>
+
+    <p>
+      Enter your friend's ChatSpace username.
+    </p>
+
+    <form id="friendForm">
+
+      <div class="form-group">
+
+        <label>Username</label>
+
+        <input
+          id="friendUsername"
+          placeholder="friend123"
+          required
+        >
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          id="closeFriendModal"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="primary"
+          type="submit"
+        >
+          Add Friend
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     UPLOAD VIDEO MODAL
+========================= -->
+
+<div
+  class="overlay"
+  id="uploadModal"
+>
+
+  <div class="modal">
+
+    <h2>Upload a Video</h2>
+
+    <p>
+      Choose a video and add a caption.
+    </p>
+
+    <form id="uploadForm">
+
+      <div class="form-group">
+
+        <label>Video</label>
+
+        <input
+          class="file-input"
+          id="videoFile"
+          type="file"
+          accept="video/*"
+          required
+        >
+
+      </div>
+
+      <video
+        class="upload-preview"
+        id="uploadPreview"
+        controls
+      ></video>
+
+
+      <div class="form-group">
+
+        <label>Caption</label>
+
+        <textarea
+          id="videoCaption"
+          rows="3"
+          placeholder="Write a caption..."
+        ></textarea>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          id="closeUploadModal"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="primary"
+          type="submit"
+        >
+          Post Video
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     CALL MODAL
+========================= -->
+
+<div
+  class="overlay"
+  id="callModal"
+>
+
+  <div class="modal call-modal">
+
+    <div
+      class="call-avatar"
+      id="callAvatar"
+    >
+      ?
+    </div>
+
+    <h2 id="callName">
+      Friend
+    </h2>
+
+    <div
+      class="call-status"
+      id="callStatus"
+    >
+      Calling...
+    </div>
+
+    <div class="call-controls">
+
+      <button
+        class="call-control"
+        id="muteButton"
+      >
+        🎙️
+      </button>
+
+      <button
+        class="call-control"
+        id="cameraButton"
+        style="display:none;"
+      >
+        📷
+      </button>
+
+      <button
+        class="call-control end"
+        id="endCall"
+      >
+        📞
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   CHATSPACE
+   Prototype application
+===================================================== */
+
+
+/* =========================
+   STORAGE
+========================= */
+
+const KEYS = {
+  users: "chatspace_users",
+  currentUser: "chatspace_current_user",
+  friends: "chatspace_friends",
+  messages: "chatspace_messages",
+  videos: "chatspace_videos"
+};
+
+
+function read(key, fallback) {
+  try {
+    return JSON.parse(
+      localStorage.getItem(key)
+    ) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+
+function write(key, value) {
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
+}
+
+
+/* =========================
+   STATE
+========================= */
+
+let users = read(KEYS.users, []);
+
+let currentUser =
+  localStorage.getItem(KEYS.currentUser);
+
+let friends = read(KEYS.friends, []);
+
+let messages = read(KEYS.messages, []);
+
+let videos = read(KEYS.videos, []);
+
+let selectedFriend = null;
+
+let authMode = "login";
+
+let callMode = null;
+
+let currentUploadURL = null;
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const auth =
+  document.getElementById("auth");
+
+const app =
+  document.getElementById("app");
+
+const loginTab =
+  document.getElementById("loginTab");
+
+const signupTab =
+  document.getElementById("signupTab");
+
+const loginForm =
+  document.getElementById("loginForm");
+
+const signupForm =
+  document.getElementById("signupForm");
+
+const loginUsername =
+  document.getElementById("loginUsername");
+
+const loginPassword =
+  document.getElementById("loginPassword");
+
+const signupUsername =
+  document.getElementById("signupUsername");
+
+const signupPassword =
+  document.getElementById("signupPassword");
+
+const signupConfirm =
+  document.getElementById("signupConfirm");
+
+const myName =
+  document.getElementById("myName");
+
+const myAvatar =
+  document.getElementById("myAvatar");
+
+const friendList =
+  document.getElementById("friendList");
+
+const friendModal =
+  document.getElementById("friendModal");
+
+const friendForm =
+  document.getElementById("friendForm");
+
+const friendUsername =
+  document.getElementById("friendUsername");
+
+const chatPage =
+  document.getElementById("chatPage");
+
+const videoPage =
+  document.getElementById("videoPage");
+
+const chatNav =
+  document.getElementById("chatNav");
+
+const videoNav =
+  document.getElementById("videoNav");
+
+const chatWelcome =
+  document.getElementById("chatWelcome");
+
+const chatUser =
+  document.getElementById("chatUser");
+
+const chatAvatar =
+  document.getElementById("chatAvatar");
+
+const chatUserName =
+  document.getElementById("chatUserName");
+
+const messagesBox =
+  document.getElementById("messages");
+
+const composer =
+  document.getElementById("composer");
+
+const messageInput =
+  document.getElementById("messageInput");
+
+const callButtons =
+  document.getElementById("callButtons");
+
+const videoFeed =
+  document.getElementById("videoFeed");
+
+const uploadModal =
+  document.getElementById("uploadModal");
+
+const uploadForm =
+  document.getElementById("uploadForm");
+
+const videoFile =
+  document.getElementById("videoFile");
+
+const videoCaption =
+  document.getElementById("videoCaption");
+
+const uploadPreview =
+  document.getElementById("uploadPreview");
+
+const callModal =
+  document.getElementById("callModal");
+
+const callAvatar =
+  document.getElementById("callAvatar");
+
+const callName =
+  document.getElementById("callName");
+
+const callStatus =
+  document.getElementById("callStatus");
+
+const cameraButton =
+  document.getElementById("cameraButton");
+
+const muteButton =
+  document.getElementById("muteButton");
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function initials(name) {
+
+  return name
+    .trim()
+    .split(/\s+/)
+    .map(x => x[0])
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
+
+}
+
+
+function normalize(name) {
+  return name.trim().toLowerCase();
+}
+
+
+function conversationKey(friend) {
+
+  return [
+    normalize(currentUser),
+    normalize(friend)
+  ].sort().join("::");
+
+}
+
+
+function time(timestamp) {
+
+  return new Date(timestamp)
+    .toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit"
+    });
+
+}
+
+
+function escapeHTML(text) {
+
+  const div =
+    document.createElement("div");
+
+  div.textContent = text;
+
+  return div.innerHTML;
+
+}
+
+
+/* =========================
+   AUTH TABS
+========================= */
+
+loginTab.onclick = () => {
+
+  authMode = "login";
+
+  loginTab.classList.add("active");
+  signupTab.classList.remove("active");
+
+  loginForm.style.display = "block";
+  signupForm.style.display = "none";
+
+};
+
+
+signupTab.onclick = () => {
+
+  authMode = "signup";
+
+  signupTab.classList.add("active");
+  loginTab.classList.remove("active");
+
+  signupForm.style.display = "block";
+  loginForm.style.display = "none";
+
+};
+
+
+/* =========================
+   SIGN UP
+========================= */
+
+signupForm.addEventListener(
+  "submit",
+  e => {
+
+    e.preventDefault();
+
+    const username =
+      signupUsername.value.trim();
+
+    const password =
+      signupPassword.value;
+
+    const confirm =
+      signupConfirm.value;
+
+
+    if (username.length < 3) {
+
+      alert(
+        "Username must be at least 3 characters."
+      );
+
+      return;
+    }
+
+
+    if (password.length < 4) {
+
+      alert(
+        "Password must be at least 4 characters."
+      );
+
+      return;
+    }
+
+
+    if (password !== confirm) {
+
+      alert(
+        "Passwords do not match."
+      );
+
+      return;
+    }
+
+
+    const exists =
+      users.some(
+        u =>
+          normalize(u.username) ===
+          normalize(username)
+      );
+
+
+    if (exists) {
+
+      alert(
+        "That username is already taken."
+      );
+
+      return;
+    }
+
+
+    users.push({
+      username,
+      password
+    });
+
+
+    write(KEYS.users, users);
+
+
+    currentUser = username;
+
+    localStorage.setItem(
+      KEYS.currentUser,
+      currentUser
+    );
+
+
+    friends = [];
+
+    selectedFriend = null;
+
+
+    startApp();
+
+  }
+);
+
+
+/* =========================
+   LOGIN
+========================= */
+
+loginForm.addEventListener(
+  "submit",
+  e => {
+
+    e.preventDefault();
+
+    const username =
+      loginUsername.value.trim();
+
+    const password =
+      loginPassword.value;
+
+
+    /*
+      Prototype convenience:
+      If there are no registered accounts,
+      allow the first login to create a local
+      account automatically.
+    */
+
+    if (users.length === 0) {
+
+      users.push({
+        username,
+        password
+      });
+
+      write(KEYS.users, users);
+
+    }
+
+
+    const user =
+      users.find(
+        u =>
+          normalize(u.username) ===
+          normalize(username) &&
+          u.password === password
+      );
+
+
+    if (!user) {
+
+      alert(
+        "Incorrect username or password."
+      );
+
+      return;
+    }
+
+
+    currentUser =
+      user.username;
+
+    localStorage.setItem(
+      KEYS.currentUser,
+      currentUser
+    );
+
+
+    startApp();
+
+  }
+);
+
+
+/* =========================
+   START APP
+========================= */
+
+function startApp() {
+
+  auth.style.display = "none";
+
+  app.classList.add("active");
+
+
+  myName.textContent =
+    currentUser;
+
+  myAvatar.textContent =
+    initials(currentUser);
+
+
+  /*
+    Friends are stored per logged-in
+    username so different local accounts
+    don't share the same friend list.
+  */
+
+  const allFriends =
+    read(KEYS.friends, {});
+
+
+  if (
+    !Array.isArray(allFriends)
+  ) {
+
+    friends = [];
+
+  }
+
+
+  renderFriends();
+
+  renderVideos();
+
+  showChat();
+
+}
+
+
+function logout() {
+
+  localStorage.removeItem(
+    KEYS.currentUser
+  );
+
+  currentUser = null;
+
+  selectedFriend = null;
+
+  app.classList.remove("active");
+
+  auth.style.display = "flex";
+
+  loginForm.reset();
+
+}
+
+
+document
+  .getElementById("logoutButton")
+  .onclick = logout;
+
+
+/* =========================
+   FRIEND STORAGE
+========================= */
+
+function getAllFriendData() {
+
+  return read(
+    KEYS.friends,
+    {}
+  );
+
+}
+
+
+function saveCurrentFriends() {
+
+  const all =
+    getAllFriendData();
+
+  all[normalize(currentUser)] =
+    friends;
+
+  write(
+    KEYS.friends,
+    all
+  );
+
+}
+
+
+function loadCurrentFriends() {
+
+  const all =
+    getAllFriendData();
+
+  friends =
+    all[normalize(currentUser)] || [];
+
+}
+
+
+/* =========================
+   FRIENDS
+========================= */
+
+function renderFriends() {
+
+  loadCurrentFriends();
+
+  friendList.innerHTML = "";
+
+
+  if (friends.length === 0) {
+
+    friendList.innerHTML = `
+      <div class="empty">
+        <strong>No friends yet.</strong><br>
+        Press + and enter someone's username
+        to add them.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  friends.forEach(friend => {
+
+    const button =
+      document.createElement("button");
+
+    button.className = "friend";
+
+
+    if (
+      selectedFriend &&
+      normalize(selectedFriend) ===
+      normalize(friend.username)
+    ) {
+
+      button.classList.add("active");
+
+    }
+
+
+    button.innerHTML = `
+      <div class="friend-avatar">
+        ${initials(friend.username)}
+      </div>
+
+      <div>
+        <div class="friend-name">
+          ${escapeHTML(friend.username)}
+        </div>
+
+        <div class="friend-status">
+          Online
+        </div>
+      </div>
+    `;
+
+
+    button.onclick = () => {
+
+      selectedFriend =
+        friend.username;
+
+      showChatWithFriend();
+
+    };
+
+
+    friendList.appendChild(button);
+
+  });
+
+}
+
+
+/* =========================
+   ADD FRIEND
+========================= */
+
+document
+  .getElementById("addFriendButton")
+  .onclick = () => {
+
+    friendModal.classList.add("active");
+
+    friendUsername.focus();
+
+  };
+
+
+document
+  .getElementById("closeFriendModal")
+  .onclick = () => {
+
+    friendModal.classList.remove(
+      "active"
+    );
+
+  };
+
+
+friendForm.addEventListener(
+  "submit",
+  e => {
+
+    e.preventDefault();
+
+    const username =
+      friendUsername.value.trim();
+
+
+    if (!username) {
+      return;
+    }
+
+
+    if (
+      normalize(username) ===
+      normalize(currentUser)
+    ) {
+
+      alert(
+        "You can't add yourself."
+      );
+
+      return;
+    }
+
+
+    const exists =
+      friends.some(
+        friend =>
+          normalize(friend.username) ===
+          normalize(username)
+      );
+
+
+    if (exists) {
+
+      alert(
+        "That person is already your friend."
+      );
+
+      return;
+    }
+
+
+    friends.push({
+      username
+    });
+
+
+    saveCurrentFriends();
+
+    friendUsername.value = "";
+
+    friendModal.classList.remove(
+      "active"
+    );
+
+
+    renderFriends();
+
+
+    selectedFriend =
+      username;
+
+    showChatWithFriend();
+
+  }
+);
+
+
+/* =========================
+   CHAT
+========================= */
+
+function showChatWithFriend() {
+
+  chatWelcome.style.display =
+    "none";
+
+  chatUser.style.display =
+    "flex";
+
+  messagesBox.style.display =
+    "flex";
+
+  composer.style.display =
+    "flex";
+
+  callButtons.style.display =
+    "flex";
+
+
+  chatUserName.textContent =
+    selectedFriend;
+
+  chatAvatar.textContent =
+    initials(selectedFriend);
+
+
+  renderFriends();
+
+  renderMessages();
+
+  messageInput.focus();
+
+}
+
+
+function renderMessages() {
+
+  messagesBox.innerHTML = "";
+
+
+  if (!selectedFriend) {
+    return;
+  }
+
+
+  const key =
+    conversationKey(
+      selectedFriend
+    );
+
+
+  const list =
+    messages[key] || [];
+
+
+  if (list.length === 0) {
+
+    messagesBox.innerHTML = `
+      <div class="welcome">
+        <h1>Say hello 👋</h1>
+        <p>
+          Start your conversation with
+          ${escapeHTML(selectedFriend)}.
+        </p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  list.forEach(message => {
+
+    const wrapper =
+      document.createElement("div");
+
+
+    const mine =
+      normalize(message.sender) ===
+      normalize(currentUser);
+
+
+    wrapper.className =
+      "message " +
+      (mine ? "me" : "them");
+
+
+    wrapper.innerHTML = `
+      <div class="bubble">
+
+        ${escapeHTML(message.text)}
+
+        <div class="message-time">
+          ${time(message.time)}
+        </div>
+
+      </div>
+    `;
+
+
+    messagesBox.appendChild(
+      wrapper
+    );
+
+  });
+
+
+  messagesBox.scrollTop =
+    messagesBox.scrollHeight;
+
+}
+
+
+composer.addEventListener(
+  "submit",
+  e => {
+
+    e.preventDefault();
+
+    if (!selectedFriend) {
+      return;
+    }
+
+
+    const text =
+      messageInput.value.trim();
+
+
+    if (!text) {
+      return;
+    }
+
+
+    const key =
+      conversationKey(
+        selectedFriend
+      );
+
+
+    if (!messages[key]) {
+      messages[key] = [];
+    }
+
+
+    messages[key].push({
+      sender: currentUser,
+      text,
+      time: Date.now()
+    });
+
+
+    write(
+      KEYS.messages,
+      messages
+    );
+
+
+    messageInput.value = "";
+
+    renderMessages();
+
+  }
+);
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showChat() {
+
+  chatPage.style.display =
+    "flex";
+
+  videoPage.classList.remove(
+    "active"
+  );
+
+  chatNav.classList.add("active");
+  videoNav.classList.remove("active");
+
+}
+
+
+function showVideos() {
+
+  chatPage.style.display =
+    "none";
+
+  videoPage.classList.add(
+    "active"
+  );
+
+  chatNav.classList.remove("active");
+  videoNav.classList.add("active");
+
+  renderVideos();
+
+}
+
+
+chatNav.onclick =
+  showChat;
+
+videoNav.onclick =
+  showVideos;
+
+
+/* =========================
+   VIDEO UPLOAD
+========================= */
+
+document
+  .getElementById("uploadButton")
+  .onclick = () => {
+
+    uploadModal.classList.add(
+      "active"
+    );
+
+  };
+
+
+document
+  .getElementById("closeUploadModal")
+  .onclick = closeUploadModal;
+
+
+function closeUploadModal() {
+
+  uploadModal.classList.remove(
+    "active"
+  );
+
+  uploadForm.reset();
+
+  uploadPreview.style.display =
+    "none";
+
+
+  if (currentUploadURL) {
+
+    URL.revokeObjectURL(
+      currentUploadURL
+    );
+
+    currentUploadURL = null;
+
+  }
+
+}
+
+
+videoFile.addEventListener(
+  "change",
+  () => {
+
+    const file =
+      videoFile.files[0];
+
+
+    if (!file) {
+      return;
+    }
+
+
+    if (
+      !file.type.startsWith("video/")
+    ) {
+
+      alert(
+        "Please choose a video file."
+      );
+
+      videoFile.value = "";
+
+      return;
+    }
+
+
+    currentUploadURL =
+      URL.createObjectURL(file);
+
+
+    uploadPreview.src =
+      currentUploadURL;
+
+    uploadPreview.style.display =
+      "block";
+
+  }
+);
+
+
+/*
+  IndexedDB would be better for large
+  video files. This prototype uses
+  localStorage for metadata and stores
+  small videos as data URLs when possible.
+*/
+
+uploadForm.addEventListener(
+  "submit",
+  async e => {
+
+    e.preventDefault();
+
+
+    const file =
+      videoFile.files[0];
+
+
+    if (!file) {
+
+      alert(
+        "Choose a video first."
+      );
+
+      return;
+    }
+
+
+    /*
+      Convert the uploaded video to a
+      data URL so the prototype can
+      remember it after refresh.
+
+      Large videos may exceed browser
+      localStorage limits.
+    */
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload = () => {
+
+      const video = {
+
+        id:
+          Date.now(),
+
+        username:
+          currentUser,
+
+        caption:
+          videoCaption.value.trim(),
+
+        src:
+          reader.result,
+
+        likes:
+          0,
+
+        comments:
+          0,
+
+        shares:
+          0,
+
+        liked:
+          false,
+
+        created:
+          Date.now()
+
+      };
+
+
+      videos.unshift(video);
+
+
+      /*
+        Only use localStorage for
+        reasonably small prototype videos.
+      */
+
+      try {
+
+        write(
+          KEYS.videos,
+          videos
+        );
+
+      } catch {
+
+        alert(
+          "This video is too large for the browser prototype. A real ChatSpace app would upload it to cloud storage."
+        );
+
+        return;
+
+      }
+
+
+      closeUploadModal();
+
+      renderVideos();
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+  }
+);
+
+
+/* =========================
+   VIDEO FEED
+========================= */
+
+function renderVideos() {
+
+  videoFeed.innerHTML = "";
+
+
+  if (videos.length === 0) {
+
+    videoFeed.innerHTML = `
+      <div class="video-empty">
+
+        <div class="video-empty-inner">
+
+          <h1>No videos yet 🎬</h1>
+
+          <p>
+            Be the first person to upload a video
+            to ChatSpace.
+          </p>
+
+        </div>
+
+      </div>
+    `;
+
+    return;
+  }
+
+
+  videos.forEach(video => {
+
+    const card =
+      document.createElement("article");
+
+    card.className =
+      "video-card";
+
+
+    card.innerHTML = `
+
+      <video
+        src="${video.src}"
+        loop
+        playsinline
+        preload="metadata"
+      ></video>
+
+
+      <div class="video-info">
+
+        <div class="video-author">
+          @${escapeHTML(video.username)}
+        </div>
+
+        <div class="video-caption">
+          ${escapeHTML(video.caption || "")}
+        </div>
+
+      </div>
+
+
+      <div class="video-actions">
+
+        <button
+          class="video-action like-button"
+        >
+          ❤️
+          <span>${video.likes}</span>
+        </button>
+
+        <button
+          class="video-action comment-button"
+        >
+          💬
+          <span>${video.comments}</span>
+        </button>
+
+        <button
+          class="video-action share-button"
+        >
+          ↗
+          <span>${video.shares}</span>
+        </button>
+
+      </div>
+    `;
+
+
+    const videoElement =
+      card.querySelector("video");
+
+
+    /*
+      TikTok-style autoplay when
+      a video becomes visible.
+    */
+
+    const observer =
+      new IntersectionObserver(
+        entries => {
+
+          entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+              videoElement.play()
+                .catch(() => {});
+
+            } else {
+
+              videoElement.pause();
+
+            }
+
+          });
+
+        },
+        {
+          threshold: 0.65
+        }
+      );
+
+
+    observer.observe(card);
+
+
+    /*
+      Tap video to pause/play.
+    */
+
+    videoElement.onclick = () => {
+
+      if (videoElement.paused) {
+
+        videoElement.play()
+          .catch(() => {});
+
+      } else {
+
+        videoElement.pause();
+
+      }
+
+    };
+
+
+    /*
+      Like
+    */
+
+    const likeButton =
+      card.querySelector(
+        ".like-button"
+      );
+
+
+    likeButton.onclick = () => {
+
+      video.liked =
+        !video.liked;
+
+
+      video.likes +=
+        video.liked ? 1 : -1;
+
+
+      write(
+        KEYS.videos,
+        videos
+      );
+
+
+      renderVideos();
+
+    };
+
+
+    /*
+      Comments
+    */
+
+    const commentButton =
+      card.querySelector(
+        ".comment-button"
+      );
+
+
+    commentButton.onclick = () => {
+
+      const comment =
+        prompt(
+          "Write a comment:"
+        );
+
+
+      if (!comment) {
+        return;
+      }
+
+
+      video.comments++;
+
+      write(
+        KEYS.videos,
+        videos
+      );
+
+      alert(
+        "Comment added in prototype mode."
+      );
+
+      renderVideos();
+
+    };
+
+
+    /*
+      Share
+    */
+
+    const shareButton =
+      card.querySelector(
+        ".share-button"
+      );
+
+
+    shareButton.onclick = async () => {
+
+      video.shares++;
+
+
+      write(
+        KEYS.videos,
+        videos
+      );
+
+
+      try {
+
+        await navigator.clipboard.writeText(
+          "ChatSpace video by @" +
+          video.username
+        );
+
+        alert(
+          "Video link copied!"
+        );
+
+      } catch {
+
+        alert(
+          "Video shared!"
+        );
+
+      }
+
+
+      renderVideos();
+
+    };
+
+
+    videoFeed.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================
+   CALLING
+========================= */
+
+document
+  .getElementById("voiceCall")
+  .onclick = () => {
+
+    startCall("voice");
+
+  };
+
+
+document
+  .getElementById("videoCall")
+  .onclick = () => {
+
+    startCall("video");
+
+  };
+
+
+function startCall(type) {
+
+  if (!selectedFriend) {
+    return;
+  }
+
+
+  callMode = type;
+
+
+  callAvatar.textContent =
+    initials(selectedFriend);
+
+  callName.textContent =
+    selectedFriend;
+
+
+  callStatus.textContent =
+    type === "video"
+      ? "Starting video call..."
+      : "Starting voice call...";
+
+
+  cameraButton.style.display =
+    type === "video"
+      ? "block"
+      : "none";
+
+
+  callModal.classList.add(
+    "active"
+  );
+
+
+  setTimeout(() => {
+
+    if (
+      callModal.classList.contains(
+        "active"
+      )
+    ) {
+
+      callStatus.textContent =
+        type === "video"
+          ? "Video call connected"
+          : "Voice call connected";
+
+    }
+
+  }, 1200);
+
+}
+
+
+muteButton.onclick = () => {
+
+  muteButton.textContent =
+    muteButton.textContent === "🎙️"
+      ? "🔇"
+      : "🎙️";
+
+};
+
+
+cameraButton.onclick = () => {
+
+  cameraButton.textContent =
+    cameraButton.textContent === "📷"
+      ? "🚫"
+      : "📷";
+
+};
+
+
+document
+  .getElementById("endCall")
+  .onclick = () => {
+
+    callModal.classList.remove(
+      "active"
+    );
+
+  };
+
+
+/* =========================
+   MOBILE SIDEBAR
+========================= */
+
+document
+  .getElementById("mobileMenu")
+  .onclick = () => {
+
+    document
+      .getElementById("sidebar")
+      .classList.toggle("open");
+
+  };
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+if (currentUser) {
+
+  startApp();
+
+} else {
+
+  auth.style.display =
+    "flex";
+
+}
+
+</script>
+
+</body>
+</html>
